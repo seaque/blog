@@ -1,0 +1,48 @@
+---
+---
+
+@import '{{ site.theme }}';
+
+/* append your custom style below */
+
+.access {
+  display: none;
+}
+
+.post-preview .preview-img {
+  display: none;
+}
+
+.site-title {
+  font-family: $font-family-sidebar;
+}
+
+.card-title {
+    font-size: 1.8rem !important;
+    font-family: $font-family-heading;
+    font-weight: 500;
+}
+
+.card-text p {
+    display: none !important;
+}
+
+#post-list .card .card-body {
+  min-height: 6rem !important;
+}
+
+#related-posts {
+  display: none;
+}
+
+.post-image {
+  width: 300px;
+  display: flex;
+  margin: 50 auto;
+}
+
+@media all and (max-width: 576px) {
+  .post-image {
+    width: 75%;
+  }
+}
