@@ -41,6 +41,38 @@
   margin: 50 auto;
 }
 
+.post-tag, a {
+  color: var(--text-color);
+}
+
+.post-content a:not(.img-link) {
+  border-bottom: 3px solid var(--link-underline-color);
+}
+
+.post-content a:not(.img-link):hover {
+  color: var(--main-bg) !important;
+  text-decoration: none;
+  background-color: var(--link-color);
+  border-radius: .1rem;
+  transition: all .2s ease-in-out;
+}
+
+.post-tail-wrapper {
+  margin-top: 1rem;
+}
+
+.post-meta {
+  font-family: $font-family-heading;
+}
+
+h1 {
+  font-weight: 600;
+}
+
+#toc-wrapper {
+  font-family: $font-family-heading;
+}
+
 @media all and (max-width: 576px) {
   .post-image {
     width: 75%;
