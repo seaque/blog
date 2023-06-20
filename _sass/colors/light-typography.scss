@@ -14,10 +14,10 @@
   --heading-color: black;
   --blockquote-border-color: #eeeeee;
   --blockquote-text-color: #9a9a9a;
-  --link-color: #0153ab;
-  --link-underline-color: #dee2e6;
+  --link-color: var(--btn-border-color);
+  --link-underline-color: var(--btn-border-color);
   --button-bg: #ffffff;
-  --btn-border-color: #6bbcff;
+  --btn-border-color: #8ac8fc;
   --btn-backtotop-color: #686868;
   --btn-backtotop-border-color: #f1f1f1;
   --btn-box-shadow: #eaeaea;
