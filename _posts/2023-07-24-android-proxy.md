@@ -47,4 +47,7 @@ BurpSuite'de Proxy sekmesine gelerek HTTP geçmişini açın. Cihaz herhangi bir
 
 ![BurpSuite Proxy History](https://www.dropbox.com/scl/fi/5ozgc19d4x4x35xuxg1kp/BurpSuiteCommunity_rXzvsOP6zu.png?rlkey=i487mrx0j4385j6bvwx0nzdwj&dl=1)
 
-Kısacası olay bu. Örneğin birkaç ay önce açık kaynak olan Kiwi Browser'ın arama çubuğundan yapılan Yahoo ve Bing aramalarının verilerini gönderdiği [ortaya çıkmıştı](https://web.archive.org/web/20210605191305/https://github.com/kiwibrowser/src/issues/352), tabii bu en hafif örneklerden biri ve geliştiricinin açıklaması da var. Fakat bazı şirketler gerçekten sınır bilmiyor, fazlasıyla özel ve kişisel veriler topluyorlar ("*-Sözleşmeyi kabul ettiniz. -Evet?*"). Bu gibi durumlarda bunları tespit etmek ve mümkün olduğunca önlemek ise bize kalıyor.
+Kısacası olay bu. Örneğin açık kaynak olan Kiwi Browser'ın arama çubuğundan yapılan Yahoo ve Bing aramalarının verilerini gönderdiği [ortaya çıkmıştı](https://web.archive.org/web/20210605191305/https://github.com/kiwibrowser/src/issues/352), tabii bu en hafif örneklerden biri ve geliştiricinin savunması da var. Fakat bazı şirketler gerçekten sınır bilmiyor, fazlasıyla özel ve kişisel veriler topluyorlar ("*-Sözleşmeyi kabul ettiniz. -Evet?*"). Bu gibi durumlarda bunları tespit etmek ve mümkün olduğunca önlemek ise bize kalıyor.
+
+> Bazı uygulamalar sertifika pinlemesi kullanabilir, bu durumda uygulamada bağlantı hatası alırsınız. [android-unpinner](https://github.com/mitmproxy/android-unpinner) ya da ReVanced ile `override-certificate-pinning` patchini kullanarak bu sorunu çözebilirsiniz.
+{: .prompt-info}
