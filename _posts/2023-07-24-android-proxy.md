@@ -34,8 +34,10 @@ Burada Import/export CA Certificate seçeneğine tıklayın. Çıkan pencerede s
 
 Kaydedilen .cer dosyasını Android cihaza atın. Dosyaya tıklayın ve istediğiniz bir isim vererek sertifikayı yükleyin. Android sistemi bilinmeyen bir kaynaktan sertifika yüklendi bildirimi verebilir. Yüklerken de uyarı veriyorsa kabul ederek devam edin. 
 
-
 ![Android System Notifications](https://www.dropbox.com/scl/fi/p5k8wxkfl2eppr1zjoru3/Screenshot_2023-07-24-14-52-57-890_com.android.settings.png?rlkey=g2q5qhssnwum0hmetet7zi3hh&dl=1){: .w-75}
+
+>Emülatöre sertifika yüklerken uzantıyı .crt olarak değişmeniz gerekebilir.
+{: .prompt-info}
 
 Cihazın Wi-Fi ayarlarına gelerek ağa bağlı olduğunuz Wi-Fi basılı tutun. Açılan menüden Ağ ayarlarını değiştir seçeneğine tıklayın. Proxy ayarlarını manuel olarak ayarlayarak Hostname kısmına bilgisayarınızın yerel IP adresini yazın. Yerel IP öğrenmek için Windows'ta `ipconfig`, Linux'te `ifconfig` komutunu kullanabilirsiniz. Port kısmına ise BurpSuite'de ayarladığımız port numarasını yazın. Burada 8082 yazıyor olmalı.
 
