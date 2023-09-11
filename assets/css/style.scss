@@ -20,7 +20,7 @@
 .card-title {
     //font-size: 1.8rem !important;
     font-family: $font-family-heading;
-    font-weight: 500;
+    font-weight: 550;
 }
 
 .card-text p {
@@ -45,6 +45,10 @@
   color: var(--text-color);
 }
 
+.post-content p {
+  font-family: Poppins;
+}
+
 .post-content a:not(.img-link) {
   border-bottom: 3px solid var(--link-underline-color);
 }
@@ -63,6 +67,7 @@
 
 .post-meta {
   font-family: $font-family-heading;
+  font-weight: 500;
 }
 
 h1 {

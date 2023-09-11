@@ -11,7 +11,7 @@ cdns:
 
 # fonts
 
-webfonts: https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Inter:wght@500;600;700&family=Chivo+Mono&display_swap
+webfonts: https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Inter:wght@200..700&family=Poppins&family=Chivo+Mono&display_swap
 
 # Libraries
 
