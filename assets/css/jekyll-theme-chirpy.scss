@@ -24,10 +24,15 @@ article .preview-img img {
 .card-title {
     // font-size: 1.8rem !important;
     font-family: $font-family-heading;
+    margin-bottom: -8px !important;
 }
 
 .card-text p {
     display: none !important;
+}
+
+div[id='tail-wrapper'] > nav[class*='post-navigation'] {
+  display: none !important;
 }
 
 #post-list .card .card-body {
