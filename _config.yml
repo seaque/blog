@@ -3,10 +3,6 @@
 # Import the theme
 theme: jekyll-theme-chirpy
 
-# Change the following value to '/PROJECT_NAME' ONLY IF your site type is GitHub Pages Project sites
-# and doesn't have a custom domain.
-baseurl: "/blog"
-
 # The language of the webpage › http://www.lingoes.net/en/translator/langcode.htm
 # If it has the same name as one of the files in folder `_data/locales`, the layout language will also be changed,
 # otherwise, the layout language will use the default value of 'en'.
@@ -54,10 +50,6 @@ google_site_verification: K2HA2cK2o5sOoSgaTx8I7dOGniOdhft7nHcSZO9fmv4 # fill in 
 
 google_analytics:
   id: # fill in your Google Analytics ID
-  # Google Analytics pageviews report settings
-  pv:
-    proxy_endpoint: # fill in the Google Analytics superProxy endpoint of Google App Engine
-    cache_path: # the local PV cache data, friendly to visitors from GFW region
 
 # Prefer color scheme setting.
 #
@@ -86,7 +78,7 @@ avatar: "https://avatars.githubusercontent.com/u/45668726?v=4"
 toc: true
 
 comments:
-  # active: giscus # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
+  active: giscus # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
   # The active options are as follows:
   disqus:
     shortname: # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
@@ -111,12 +103,15 @@ assets:
     enabled: true # boolean, keep empty means false
     # specify the Jekyll environment, empty means both
     # only works if `assets.self_host.enabled` is 'true'
-    env: # [development|production]
+    env: development # [development|production]
 
 pwa:
   enabled: true # the option for PWA feature
 
 paginate: 10
+
+# The base URL of your site
+baseurl: "/blog"
 
 # ------------ The following options are not recommended to be modified ------------------
 
@@ -181,16 +176,15 @@ compress_html:
 exclude:
   - "*.gem"
   - "*.gemspec"
+  - docs
   - tools
   - README.md
-  - CHANGELOG.md
   - LICENSE
   - rollup.config.js
-  - node_modules
   - package*.json
 
 jekyll-archives:
-  enabled: [categories]
+  enabled: [categories, tags]
   layouts:
     category: category
     tag: tag
