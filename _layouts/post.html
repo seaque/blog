@@ -19,7 +19,7 @@ tail_includes:
       <!-- published date -->
       <span>
         <i class="fas fa-calendar-alt fa-fw"></i>
-        {{ site.data.locales[lang].post.posted }}
+        <!-- {{ site.data.locales[lang].post.posted }} -->
         {% include datetime.html date=page.date tooltip=true lang=lang %}
       </span>
 
@@ -27,7 +27,7 @@ tail_includes:
       {% if page.last_modified_at and page.last_modified_at != page.date %}
         <span>
           <i class="fas fa-calendar-check fa-fw"></i>
-          {{ site.data.locales[lang].post.updated }}
+          <!-- {{ site.data.locales[lang].post.updated }} -->
           {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
         </span>
       {% endif %}
@@ -59,7 +59,7 @@ tail_includes:
             {% assign authors = page.authors %}
           {% endif %}
 
-          {{ site.data.locales[lang].post.written_by }}
+          <!-- {{ site.data.locales[lang].post.written_by }} -->
 
           <em>
             {% if authors %}
@@ -78,8 +78,9 @@ tail_includes:
         </span>
 
         <!-- read time -->
+        <span>
         <i class="fas fa-stopwatch fa-fw"></i>
-        {% include read-time.html content=content prompt=true lang=lang %}
+        {% include read-time.html content=content prompt=false lang=lang %}
       </div>
       <!-- .d-flex -->
     </div>
