@@ -14,7 +14,7 @@ timezone: Europe/Istanbul
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: seaque Blog # the main title
+title: seaque (s) # the main title
 
 tagline: Terminal araçları, Android geliştirme, ters mühendislik. # it will display as the sub-title
 
@@ -23,13 +23,13 @@ description: >- # used by seo meta and the atom feed
 
 # Fill in the protocol & hostname for your site.
 # e.g. 'https://username.github.io', note that it does not end with a '/'.
-url: "https://seaque.github.io"
+url: 'https://seaque.github.io'
 
 github:
   username: seaque # change to your github username
 
 twitter:
-  username: twitter_username # change to your Twitter username
+  # username: twitter_username # change to your Twitter username
 
 social:
   # Change to your full name.
@@ -39,7 +39,7 @@ social:
   links:
     # The first element serves as the copyright owner's link
     - https://twitter.com/username # change to your Twitter homepage
-    - https://github.com/username # change to your GitHub homepage
+    - https://github.com/seaque # change to your GitHub homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
@@ -95,10 +95,10 @@ theme_mode: # [light | dark]
 # will be added to all media resources (site avatar, posts' images, audio and video files) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-cdn:
+cdn: 'https://cdn.jsdelivr.net/gh/seaque/dev@main/'
 
 # the avatar on sidebar, support local or CORS resources
-avatar: "https://avatars.githubusercontent.com/u/45668726?v=4"
+avatar: 'https://avatars.githubusercontent.com/u/45668726?v=4'
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
@@ -132,7 +132,7 @@ comments:
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
 assets:
   self_host:
-    enabled: true # boolean, keep empty means false
+    enabled: # boolean, keep empty means false
     # specify the Jekyll environment, empty means both
     # only works if `assets.self_host.enabled` is 'true'
     env: # [development | production]
