@@ -26,7 +26,7 @@ description: >- # used by seo meta and the atom feed
 url: 'https://seaque.github.io'
 
 github:
-  username: seaque # change to your github username
+  username: seaque # change to your GitHub username
 
 twitter:
   # username: twitter_username # change to your Twitter username
@@ -72,7 +72,10 @@ analytics:
     id: # fill in your Cloudflare Web Analytics token
   fathom:
     id: # fill in your Fathom Site ID
+  fathom:
+    id: # fill in your Fathom Site ID
 
+# Page views settings
 # Page views settings
 pageviews:
   provider: # now only supports 'goatcounter'
@@ -85,6 +88,8 @@ pageviews:
 #
 # Available options:
 #
+#     light — Use the light color scheme
+#     dark — Use the dark color scheme
 #     light — Use the light color scheme
 #     dark — Use the dark color scheme
 #
@@ -108,6 +113,7 @@ social_preview_image: # string, local or CORS resources
 toc: true
 
 comments:
+  # Global switch for the post-comment system. Keeping it empty means disabled.
   # Global switch for the post-comment system. Keeping it empty means disabled.
   provider: # [disqus | utterances | giscus]
   # The provider options are as follows:
@@ -139,7 +145,9 @@ assets:
 
 pwa:
   enabled: true # The option for PWA feature (installable)
+  enabled: true # The option for PWA feature (installable)
   cache:
+    enabled: true # The option for PWA offline cache
     enabled: true # The option for PWA offline cache
     # Paths defined here will be excluded from the PWA cache.
     # Usually its value is the `baseurl` of another website that
