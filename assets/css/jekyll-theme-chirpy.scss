@@ -1,4 +1,13 @@
---- --- @import 'main';
+--- --- @import 'main
+ {
+  %- if jekyll.environment=='production' -%
+}
+
+.bundle {
+  %- endif -%
+}
+
+';
 
 /* append your custom style below */
 
@@ -23,6 +32,10 @@ aside[aria-label='Panel] {
 
 .card-text p {
   display: none !important;
+}
+
+main .preview-img {
+  display: none;
 }
 
 article .preview-img img {
