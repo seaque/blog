@@ -14,7 +14,7 @@ timezone: Europe/Istanbul
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: seaque (s) # the main title
+title: seaque # the main title
 
 tagline: Terminal araçları, Android geliştirme, ters mühendislik. # it will display as the sub-title
 
