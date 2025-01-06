@@ -67,12 +67,12 @@ Pencereyi kapattıktan sonra Çalıştırma/Ayıklama Konfigürasyonları ayarla
 ![idea64](https://dl.dropbox.com/scl/fi/t0tje2si4qcdkekp9g5ai/idea6_2024-04-01.png?rlkey=83jya0vt59s7btghao1y19qlf&dl=1){: .dark .w-75 .shadow .rounded-10 }
 ![idea64](https://dl.dropbox.com/scl/fi/rmouqixyjf8yb4jgrtdoq/idea64_HXkaYiechy.jpg?rlkey=59lgj8wz799xgmfqw38hurlgz&dl=1){: .light .w-75 .shadow .rounded-10 }
 
-Program komutları kısmını aynı terminalde CLI kullanıyormuş gibi yazıyoruz. <version> ibaresinin değişken olabileceğine dikkat edin.
+Program komutları kısmını aynı terminalde CLI kullanıyormuş gibi yazıyoruz. <version> ibaresinin değişken olabileceğine ve dizin konumuna dikkat edin. Çalışma dizini `revanced-cli` projesi olarak ayarlanmışsa ona göre dizini ayarlayın.
 
 ```
 patch
--b ..\revanced-patches\build\libs\revanced-patches-<version>.jar
-..\some.apk
+-p ..\revanced-patches\patches\build\libs\patches-<version>.rvp
+..\to-be-patched.apk
 ```
 Gradle türünde bir *Before launch* komutu ekleyin. Proje olarak patches projesini seçin ve komutlar kısmına `build` yazın.
 
@@ -81,12 +81,12 @@ Gradle türünde bir *Before launch* komutu ekleyin. Proje olarak patches projes
 
 ### Debug Süreci
 
-Projedeki patchlerden birine debug noktası koyarak düzgün çalışmakta olduğunu kontrol edin. Konfigürasyonda `some.apk` yerine patchlemek istediğiniz Android paketi ismi ve `patches` projesinin versiyonu doğru şekilde yazılmış olmalı. Ben [revanced.app](https://revanced.app/patches?pkg=com.google.android.youtube) sitesindeki önerilen versiyonu kullanacağım, dolayısıyla konfigürasyon şu şekilde.
+Projedeki patchlerden birine debug noktası koyarak düzgün çalışmakta olduğunu kontrol edin. Konfigürasyonda `to-be-patched.apk` yerine patchlemek istediğiniz Android paketi ismi ve `patches` projesinin versiyonu doğru şekilde yazılmış olmalı. Ben [revanced.app](https://revanced.app/patches?pkg=com.google.android.youtube) sitesindeki önerilen versiyonu kullanacağım, dolayısıyla konfigürasyon şu şekilde. Ayrıca APK nodpi olmalıdır.
 
 ```
 patch
--b ..\revanced-patches\build\libs\revanced-patches-4.5.0-dev.1.jar
-..\com.google.android.youtube_19.09.37.apk
+-b ..\revanced-patches\patches\build\libs\patches-5.2.1-dev.5.rvp
+..\com.google.android.youtube_19.47.53.apk
 ```
 
 Patchlemekte olduğunuz uygulamaya uygun olanlardan birine debug noktası koyup başarılı bir şekilde durduğunu gördüyseniz başka bir şeye ihtiyaç kalmadı.
@@ -100,7 +100,7 @@ Patchler çoğunlukla **Bytecode** ve **Resource** olarak ikiye ayrılır. Bytec
 >`RawResourcePatch` benzer isimdeki yöntemle aynı işe yarıyor, sadece uygulamanın kaynaklarını decode etmeden daha hızlı bir şekilde patchlemek için mevcut.
 {: .prompt-info}
 
-Bu rehberde sadece basit düzeyde **Bytecode** ve **Resource** patch işlemini anlatacağım.
+Bu rehberde sadece giriş düzeyinde **Bytecode** ve **Resource** patch işlemini anlatacağım.
 
 ### Parmak İzi
 
@@ -115,7 +115,7 @@ parameters = listOf("Z"),
 ```
 {: .nolineno}
 
-Bu durumda `void` değer dönüşlü, `PUBLIC` erişimli ve `BOOLEAN` (smali kodunda Z) türünde parametre alan bir fonksiyonu hedefliyor olduğum anlaşılır. Sonradan bunu **BytecodePatch** constructor fonksiyonuna sunacağız. 
+Bu durumda `void` değer dönüşlü, `PUBLIC` erişimli ve `BOOLEAN` (smali kodunda Z) türünde parametre alan bir fonksiyonu hedefliyor olduğum anlaşılır. Sonradan bu nesneyi **BytecodePatch** constructor fonksiyonuna içerisine parametre olarak sunacağız. 
 
 ```kotlin
 object SomePatch : BytecodePatch(
@@ -128,26 +128,29 @@ object SomePatch : BytecodePatch(
 
 ### Patch İskeleti
 
-Bir patch öncelikle @Patch() içerisinde yazılan metadata bilgileri içermelidir.
+Patch constructor fonksiyonunda ve içerisinde metadata bilgileri belirtilir.
 
 ```kotlin
-@Patch(
+bytecodePatch(
     name = "Disable ads",
     description = "Disable ads in the app.",
-    dependencies = [DisableAdsResourcePatch::class],
-    compatiblePackages = [CompatiblePackage("com.some.app", ["1.3.0"])]
-)
+) {
+    compatibleWith("com.some.app")
+
+    execute {
+        ...
+    }
+}
 ```
 {: .nolineno}
 
 - **`name`**: Patch ismi. Belirteç olarak kullanılır. İsimsiz olursa *PatchBundleLoader* tarafından tanınmaz ama diğer patchler bağlılık olarak kullanabilir.
 - **`description`**: Patch açıklaması. İsim yeterince açıklayıcıysa gerekli olmayabilir.
-- **`dependencies`**: Patchin bağımlı olduğu diğer patchler. Öncelikle bunlar çalıştırılacaktır, eğer bağımlı olunan patchler başarısız olursa bu patch de uygulanmaz.
-- **`compatiblePackages`**: Bir dizi `CompatiblePackage` nesnesi. Her bir `CompatiblePackage` nesnesi, paket adı ve uyumlu versiyonlar dizisi içerir. Bu parametre paket adı ve versiyonları tanımlar. Ad verilmezse tüm paketler ile uyumlu olduğu var sayılır. Versiyon dizisi boş bırakılırsa, pakete ait tüm versiyonlarla uyumlu olduğu kabul edilir.
+- **`compatibleWith`**: Uygulamanın paket adı.
 
 ### Dizin Yapısı
 
-Patchler, `revanced-patches/src/main/kotlin/app/revanced/patches/<uygulama-adı>` şeklinde düzene koyulur. Patch ismi işlevinden gelmektedir. Objektif bir dilde açıklama yazılır (örn. 'Shorts butonunu gizler'). Parmak izi, olabildiğince az ve birçok sürümde (tabii şart değil, bazı patchler tek bir sürüme özel) geçerli olabilecek şekilde belirteçler kullanarak yazılmalı. Pek anlaşılır olmayan kısımlar için yorum satırları da eklenebilir.
+Patchler, `revanced-patches/src/main/kotlin/app/revanced/patches/<uygulama-adı>` şeklinde düzene koyulur. Patch ismi işlevinden gelmektedir. Objektif bir dilde açıklama yazılır (örn. 'Shorts butonunu gizler'). Parmak izi, olabildiğince az ve öz yazılır. Verilen iz, birçok sürümde yakalanabilecek şekilde oluşturulursa daha iyi olacaktır. Anlaşılır olmayan kısımlar için yorum satırları eklenebilir.
 
 ## Patch Yazımı
 
