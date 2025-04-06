@@ -82,9 +82,26 @@ main .preview-img,
   font-family: 'DM Serif Display', serif;
 }
 
+#sidebar #avatar {
+  overflow: visible !important;
+  box-shadow: none;
+  width: 6em;
+  height: 6em;
+}
+
+#sidebar #avatar img {
+  border-radius: 16px;
+}
+
+#sidebar #avatar img:hover {
+  transform: none;
+  box-shadow: var(--card-hovor-bg) -5px 5px, var(--card-hovor-bg) -10px 10px, var(--card-hovor-bg) -15px 15px, var(--card-hovor-bg) -20px 20px;
+  transition: all .2s ease-in-out;
+}
+
 .card-title {
   font-family: DM Serif Display, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
-  margin-top: -6px !important;
+  margin-top: -2px !important;
   margin-bottom: -10px !important;
 }
 
@@ -153,9 +170,10 @@ div[class^='language-'] .highlight code pre {
 
 html:not([data-mode]),
 html[data-mode="dark"] {
-  --sidebar-bg: radial-gradient(circle, rgba(42, 30, 107, 1) 0%, rgba(35, 37, 46, 1) 100%);
+  --sidebar-bg: linear-gradient(260deg, var(--main-bg) 40%, rgba(83, 30, 107, 0.5) 100%);
   --sidebar-hover-bg: #a84bff56;
-  --card-shadow: #a84bff40 0 1px 2px 0,
+  --sidebar-border-color: var(--main-bg);
+  --card-shadow: #a84bff69 0 1px 2px 0,
     rgba(211, 209, 209, 0.15) 0 0 0 1px;
   --card-hovor-bg: var(--sidebar-hover-bg);
   --link-color: #c795f79a;
