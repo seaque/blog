@@ -28,13 +28,13 @@ url: 'https://seaque.github.io'
 github:
   username: seaque # change to your GitHub username
 
-twitter:
+# twitter:
   # username: twitter_username # change to your Twitter username
 
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
-  # name:
+  name: Snowden
   email: seaque@protonmail.com # change to your email address
   links:
     # The first element serves as the copyright owner's link
