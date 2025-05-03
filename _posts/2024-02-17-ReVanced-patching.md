@@ -4,7 +4,7 @@ date: 2024-02-17 11:33 +0300
 categories: [Android]
 ---
 
-Peki, uygulamaların üzerinde değişiklik yapabiliyoruz. Bunlar sadece Android paketi halinde elimizde duran şeyler. Fakat yapılan değişikliklerin, yani yemeğin tarifini kimse göremiyor. İşte bir ReVanced yaması tam olarak bu. Tarifteki bazı kısımlar mutfağa girmeyenler için pek anlamlı olmayabilir, amaç tarifin açık bir şekilde mevcut olması ve aşçılar tarafından okunabilmesidir. Öncelikle, geliştirme ortamını hazırlayalım.
+Uygulamaların üzerinde değişiklik yapabiliyoruz ama bunlar sadece değiştirilen Android paketi halinde kapalı bir şekilde var oluyor. Yapılan değişiklikleri göstersek dahi, paylaşılan paket dosyasının sadece o değişikliklere sahip olduğu kesin değil. Bir ReVanced yaması, bir değişikliğin nasıl ve nereyi etkilediğini açık bir şekilde gösterir ve herkes yamaları uygulayabilir. Öncelikle, geliştirme ortamını hazırlayalım.
 
 
 ## Araçlar
@@ -36,6 +36,7 @@ Patches projesinin dizininde `./gradlew build` komutunu çalıştırın.
 
 >Authentication hatası alıyorsanız [bağlantıdan](https://github.com/settings/tokens/new?scopes=read:packages&description=ReVanced) `read:packages` iznine sahip bir token oluşturun. Verilen tokeni kullanıcı dosyasında `.gradle` dizininde `gradle.properties` içerisine (yoksa oluşturarak) ekleyin.
 {: .prompt-info}
+
 ```
 gpr.user = <github kullanıcı adı>
 gpr.key = <token>
@@ -93,20 +94,18 @@ Patchlemekte olduğunuz uygulamaya uygun olanlardan birine debug noktası koyup 
 
 ## Patch Anatomisi
 
-![Patch Shot](https://dl.dropbox.com/scl/fi/4uspn2wve73l307ok71ui/IMG_20240506_1317.jpg?rlkey=nw7kepdcz769cevtrurekvqpl&st=jjqgzaxs&dl=1){: .shadow .w-50 .rounded-10}
+Patchlerin çoğu **BytecodePatch** ve **ResourcePatch** yöntemini kullanır. **Bytecode**, uygulamanın smali kodunda; **Resource**, Android'in uygulama kaynakları `(resources.arsc)` kısmında değişiklik yapmaya yarar. İkisi birlikte de kullanılabilir (özel ayarlara sahip olan patchlerde bunu görebilirsiniz). Sonradan eklenen **Hex** patch desteğiyse byte değerleri üzerinde değişikliği mümkün kılar. Byte seviyesinde değişiklik, uygulamanın farklı dillerde yazılmış decode edilemeyen kütüphaneler (native library) kullanması durumunda gerekiyor. Örneğin Unity IL2CPP yöntemini getirerek oyunların incelenmesini zorlaştırmıştır. 
 
-Patchler çoğunlukla **Bytecode** ve **Resource** olarak ikiye ayrılır. Bytecode, uygulamanın smali kodunda; Resource, Android'in uygulama kaynakları (strings, values, styles) kısmında değişiklik yapmaya yarar. Çoğu patch ikisini birlikte kullanır. Sonradan eklenen **Hex** patch desteğiyse byte değerleri üzerinde değişikliği mümkün kılmakta. Byte seviyesinde inceleme yapılması, uygulamanın farklı dillerle yazılmış decode edilemeyen kütüphaneler (native library) kullanması durumunda gerekiyor.
-
->`RawResourcePatch` benzer isimdeki yöntemle aynı işe yarıyor, sadece uygulamanın kaynaklarını decode etmeden daha hızlı bir şekilde patchlemek için mevcut.
+>`RawResourcePatch` benzer isimdeki yöntemle aynı işe yarıyor, sadece `resources` dosyasını decode etmeden daha hızlı bir şekilde patchlemek için mevcut.
 {: .prompt-info}
 
-Bu rehberde sadece giriş düzeyinde **Bytecode** ve **Resource** patch işlemini anlatacağım.
+Bu rehberde temel düzeyinde **Bytecode** ve **Resource** patch işlemini anlatacağım.
 
 ### Parmak İzi
 
-Hedeflediğiniz fonksiyonun adı şifrelenmiş ya da birkaç sürüm sonra değişikliğe uğramış olabilir. Bu noktada parmak izi yöntemi devreye giriyor. Bir fonksiyonun dönüş değeri `(void, int)` erişim belirteçleri `(PUBLIC, STATIC)` ve aldığı parametreler gibi değerleri belirterek tespit etmeye yarıyor.
+Patchleme işlemi gerçekleşmeden önce yapılması gereken, hedef dosyanın/fonksiyonun/satırların nerede olduğunu belirtmektir. Bu noktada parmak izi yöntemi devreye girer. Bir fonksiyona ait dönüş değeri `(void, int)`, erişim belirteçleri `(PUBLIC, STATIC)` ve aldığı parametreler gibi değerleri belirterek, değiştireceğimiz noktayı hedefleriz. 
 
-Örneğin şu şekilde değerler belirttim diyelim:
+Şu şekilde değerler belirtmiş olsaydık:
 
 ```kotlin
 returnType = "V",
@@ -115,7 +114,7 @@ parameters = listOf("Z"),
 ```
 {: .nolineno}
 
-Bu durumda `void` değer dönüşlü, `PUBLIC` erişimli ve `BOOLEAN` (smali kodunda Z) türünde parametre alan bir fonksiyonu hedefliyor olduğum anlaşılır. Sonradan bu nesneyi **BytecodePatch** constructor fonksiyonuna içerisine parametre olarak sunacağız. 
+Bu izden anlaşılan; `void` değer döndüren, `PUBLIC` erişimli ve `BOOLEAN` (smali kodunda Z) türünde parametre alan bir fonksiyon hedef alınmıştır. Geri dönen `fingerprint` türündeki nesne **BytecodePatch** constructor fonksiyonuna içerisine parametre olarak sunulur. 
 
 ```kotlin
 object SomePatch : BytecodePatch(
@@ -126,14 +125,23 @@ object SomePatch : BytecodePatch(
 ```
 {: .nolineno}
 
+Ek bir bilgi olarak, parmak izi yöntemlerinin verimlilik sıralaması şu şekilde:
+
+* **En Hızlı**: `[strings]` belirteciyle. Verilen dizelerden en az biri tam eşleşme sağlamalıdır.
+* **Daha Hızlı**: `[accessFlags]`, `[returnType]` ve `[parameters]` seçenekleri sağlanarak.
+* **Hızlı:** `[accessFlags]` ve `[returnType]` kombinasyonu.
+* **En Yavaş**: Sadece `[custom]` ve `[opcodes]` kullanarak.
+
+İz yazarken istediğiniz parametreleri kullanabilirsiniz.
+
 ### Patch İskeleti
 
 Patch constructor fonksiyonunda ve içerisinde metadata bilgileri belirtilir.
 
 ```kotlin
-bytecodePatch(
-    name = "Disable ads",
-    description = "Disable ads in the app.",
+val `patchName` = bytecodePatch(
+    name = "Some patch",
+    description = "Does some thing.",
 ) {
     compatibleWith("com.some.app")
 
@@ -145,12 +153,12 @@ bytecodePatch(
 {: .nolineno}
 
 - **`name`**: Patch ismi. Belirteç olarak kullanılır. İsimsiz olursa *PatchBundleLoader* tarafından tanınmaz ama diğer patchler bağlılık olarak kullanabilir.
-- **`description`**: Patch açıklaması. İsim yeterince açıklayıcıysa gerekli olmayabilir.
+- **`description`**: Patch açıklaması.
 - **`compatibleWith`**: Uygulamanın paket adı.
 
 ### Dizin Yapısı
 
-Patchler, `revanced-patches/src/main/kotlin/app/revanced/patches/<uygulama-adı>` şeklinde düzene koyulur. Patch ismi işlevinden gelmektedir. Objektif bir dilde açıklama yazılır (örn. 'Shorts butonunu gizler'). Parmak izi, olabildiğince az ve öz yazılır. Verilen iz, birçok sürümde yakalanabilecek şekilde oluşturulursa daha iyi olacaktır. Anlaşılır olmayan kısımlar için yorum satırları eklenebilir.
+Patchler, `revanced-patches/src/main/kotlin/app/revanced/patches/<uygulama-adı>` şeklinde düzene koyulur. Patch ismi işlevinden gelmektedir. Objektif bir dilde açıklama yazılır (örn. 'Shorts butonunu gizler'). Parmak izi, olabildiğince az ve öz yazılır. Verilen izin, birçok sürümde geçerli olacak şekilde oluşturulması patchi daha erişilebilir ve kapsamlı hale getirecektir.
 
 ## Patch Yazımı
 
@@ -158,9 +166,9 @@ Rehberde kullanılmak üzere yazdığım ufak bir `patchme` uygulaması bulunmak
 
 ### JADX ile İnceleme
 
-Bağlantıdan [`patchme.apk`](https://www.dropbox.com/scl/fi/hru4anz7y0bo2t54zd0mm/patchme.apk?rlkey=lesb72xbuureic3e7osbri5x8&st=oivbgppl&dl=0) dosyasını indirin ve [JADX](https://github.com/skylot/jadx/releases/latest) ile açın.
+Bağlantıdan [`patchme.apk`](https://www.dropbox.com/scl/fi/hru4anz7y0bo2t54zd0mm/patchme.apk?rlkey=lesb72xbuureic3e7osbri5x8&st=oivbgppl&dl=0) dosyasını indirin. Uygulamayı açıp göz atabilirsiniz. Okumaya devam etmeden hangi noktalarda açık olabileceğini düşünün.
 
-`dev.seaque.patchme` paketinin `MainActivity` dosyasında uygulamanın mantık kısmı bulunmakta. Buradan göze çarpan, boolean türünde değer döndüren `isUnlocked` fonksiyonu. Parmak izinde bunu hedef alacağız. Parmak izi yazarken smali koduna göre yazdığımıza dikkat edin.
+Uygulamayı [JADX](https://github.com/skylot/jadx/releases/latest) ile açın. `dev.seaque.patchme` paketinin `MainActivity` dosyasında mantık kısmı bulunmakta. Burada, boolean türünde değer döndüren `isUnlocked` fonksiyonu göze çarpıyor. Parmak izinde bunu hedef alacağız. Parmak izi, smali koduna göre yazılır.
 
 ```smali
 .method isUnlocked(Ljava/lang/String;)Z

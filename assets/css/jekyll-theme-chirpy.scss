@@ -50,6 +50,8 @@
 
 /* append your custom style below */
 
+aside[aria-label="Sidebar"] {display:none; }
+
 .card-wrapper {line-height: 1;}
 
 #post-list .card-wrapper:not(:last-child) {
